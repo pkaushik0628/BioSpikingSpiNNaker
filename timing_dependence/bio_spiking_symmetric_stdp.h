@@ -71,4 +71,4 @@ static inline update_state_t timing_apply_post_spike(uint32_t time, uint32_t las
     double val = gain*(double)decayed_pre;
     return weight_one_term_apply_potentiation(previous_state, (int32_t)val); 
 }
-
+#endif
