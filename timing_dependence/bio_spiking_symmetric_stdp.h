@@ -3,7 +3,7 @@
 
 #include <neuron/plasticity/stdp/synapse_structure/synapse_structure_weight_impl.h>
 #include "timing.h"
-#include <neuron/plasticity/stdp/weight_dependence/weight_one_term.h>
+#include <neuron/plasticity/stdp/weight_dependence/weight_additive_one_term_impl.h>
 #include <debug.h>
 #include <neuron/plasticity/stdp/maths.h>
 #include <neuron/plasticity/stdp/stdp_typedefs.h>
