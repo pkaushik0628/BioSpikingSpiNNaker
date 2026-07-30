@@ -101,8 +101,8 @@ Adds the impact of post spike to STDP trace: performs exponential decay to post 
  */
 static inline post_trace_t timing_add_post_spike(uint32_t time, uint32_t last_time, post_trace_t last_trace){
     post_trace_t temp = timing_decay_post(time, last_time, last_trace);
-    temp.post1 = temp.post1 + invtau_fast;
-    temp.post2 = temp.post2 + invtau_slow;
+    temp.post1 = temp.post1 + *invtau_fast;
+    temp.post2 = temp.post2 + *invtau_slow;
     temp.last_spike_time = time;
     return temp;
 }
@@ -117,7 +117,7 @@ Adds the impact of pre spike to STDP trace: performs exponential decay to pre sy
  */
 static inline pre_trace_t timing_add_pre_spike(uint32_t time, uint32_t last_time, pre_trace_t last_trace){
     pre_trace_t temp = timing_decay_pre(time, last_time, last_trace);
-    temp.pre1 = temp.pre1 + invtau_fast;
+    temp.pre1 = temp.pre1 + *invtau_fast;
     return temp;
 }
 
@@ -135,7 +135,7 @@ Called on pre-spike: Updates STDP state by calculating weight updates (depressio
 static inline update_state_t timing_apply_pre_spike(uint32_t time, UNUSED pre_trace_t pre_trace, UNUSED uint32_t last_pre_time, UNUSED pre_trace_t last_pre_trace, uint32_t last_post_time, post_trace_t last_post_trace, update_state_t previous_state){
     uint32_t dt = time - last_post_time;
     int32_t decayed_post = STDP_FIXED_MUL_16X16(last_post_trace.post1, maths_lut_exponential_decay(dt, tau_minus_lookup));
-    double gain = (double)(dep_amp * learning_rate);
+    double gain = (double)(*dep_amp) * (*learning_rate);
     double val = gain*(double)decayed_post;
     return weight_one_term_apply_depression(previous_state, (int32_t) val);  
 }
@@ -156,7 +156,7 @@ static inline update_state_t timing_apply_post_spike(uint32_t time, UNUSED post_
     int32_t decayed_pre_fast = STDP_FIXED_MUL_16X16(last_pre_trace.pre1, maths_lut_exponential_decay(dt, tau_plus_lookup));
     int32_t decayed_post_slow = STDP_FIXED_MUL_16X16(last_post_trace.post2, maths_lut_exponential_decay(dt, tau_y_lookup));
     int32_t triplet_term =STDP_FIXED_MUL_16X16(decayed_pre_fast,decayed_post_slow);
-    double gain = (double)(pot_amp * learning_rate);
+    double gain = (double)(*pot_amp) * (*learning_rate);
     double val = gain*(double)triplet_term;
     return weight_one_term_apply_potentiation(previous_state, (int32_t)val); 
 }
