@@ -1,15 +1,12 @@
 //! \file
-//! \brief Initialisation for timing_pfister_triplet_impl.h
+//! \brief Initialisation for bio spiking symmetric 
 #include "bio_spiking_symmetric_stdp.h"
 
 //---------------------------------------
 // Globals
 //---------------------------------------
 // Exponential lookup-tables
-int16_lut *tau_symm_lookup;
-double *symm_amp; 
-double *learning_rate;
-uint16_t *invtau_symm;
+int16_lut *tau_plus_lookup;
 
 //---------------------------------------
 // Functions
@@ -26,3 +23,4 @@ address_t timing_initialise(address_t address) {
 
     return lut_address;
 }
+
