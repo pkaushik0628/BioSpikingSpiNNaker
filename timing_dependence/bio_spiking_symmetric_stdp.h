@@ -9,10 +9,7 @@
 #include <neuron/plasticity/stdp/stdp_typedefs.h>
 
 // External Variables
-extern int16_lut *tau_symm_lookup;
-extern double *symm_amp; 
-extern double *learning_rate;
-extern uint16_t *invtau_symm;
+extern int16_lut *tau_plus_lookup;
 
 /**
 Post trace
@@ -84,7 +81,7 @@ Adds the impact of post spike to STDP trace: performs exponential decay to post 
  */
 static inline post_trace_t timing_add_post_spike(uint32_t time, uint32_t last_time, post_trace_t last_trace){
     post_trace_t temp = timing_decay_post(time, last_time, last_trace);
-    temp.trace = temp.trace + *invtau_symm;
+    temp.trace = temp.trace + 5*STDP_FIXED_POINT_ONE;
     temp.last_spike_time = time;
     return temp;
 }
@@ -99,7 +96,7 @@ Adds the impact of a pre-spike to STDP trace: performs exponential decay to pre 
  */
 static inline pre_trace_t timing_add_pre_spike(uint32_t time, uint32_t last_time, pre_trace_t last_trace){
     pre_trace_t temp = timing_decay_pre(time, last_time, last_trace);
-    temp.trace = temp.trace + *invtau_symm;
+    temp.trace = temp.trace + 5*STDP_FIXED_POINT_ONE;
     temp.last_spike_time = time;
     return temp;
 }
@@ -114,14 +111,12 @@ Note: We use weight_one_term_apply_potentiation() because this is potentiation o
 @param last_post_time the previous time of post-spike
 @param last_post_trace the previous post-syn trace
 @param previous_state the state to be updated
-@math dW = A_sym*eta*U_post(t-dt)*exp(-dt/tau)
+@math dW = A_minus*U_post(t-dt)*exp(-dt/tau_minus), where A_minus = A_plus, tau_plus = tau_minus
  */
 static inline update_state_t timing_apply_pre_spike(uint32_t time, UNUSED pre_trace_t pre_trace, UNUSED uint32_t last_pre_time, UNUSED pre_trace_t last_pre_trace,  uint32_t last_post_time, post_trace_t last_post_trace, update_state_t previous_state){
     uint32_t dt = time - last_post_time;
-    int32_t decayed_post = STDP_FIXED_MUL_16X16(last_post_trace.trace, maths_lut_exponential_decay(dt, tau_symm_lookup));
-    double gain = (double)(*symm_amp)*(*learning_rate);
-    double val = gain*(double)decayed_post;
-    return weight_one_term_apply_potentiation(previous_state, (int32_t) val);  
+    int32_t decayed_post = STDP_FIXED_MUL_16X16(last_post_trace.trace, maths_lut_exponential_decay(dt, tau_plus_lookup));
+    return weight_one_term_apply_potentiation(previous_state, decayed_post);  
 }
 
 /**
@@ -133,13 +128,11 @@ Called on post spike: Updates STDP state by calculating weight updates (technica
 @param last_post_time the previous time of post-spike
 @param last_post_trace the previous post-syn trace
 @param previous_state the state to be updated
-@math dW = A_sym*eta*U_pre(t-dt)*exp(-dt/tau)
+@math dW = A_plus*U_pre(t-dt)*exp(-dt/tau_plus), where A_plus = A_minus, tau_plus = tau_minus
  */
 static inline update_state_t timing_apply_post_spike(uint32_t time, UNUSED post_trace_t post_trace, uint32_t last_pre_time, pre_trace_t last_pre_trace, UNUSED uint32_t last_post_time, UNUSED post_trace_t last_post_trace, update_state_t previous_state){
     uint32_t dt = time - last_pre_time;
-    int32_t decayed_pre = STDP_FIXED_MUL_16X16(last_pre_trace.trace, maths_lut_exponential_decay(dt, tau_symm_lookup));
-    double gain = (double)(*symm_amp)*(*learning_rate);
-    double val = gain*(double)decayed_pre;
-    return weight_one_term_apply_potentiation(previous_state, (int32_t) val); 
+    int32_t decayed_pre = STDP_FIXED_MUL_16X16(last_pre_trace.trace, maths_lut_exponential_decay(dt, tau_plus_lookup));
+    return weight_one_term_apply_potentiation(previous_state, decayed_pre); 
 }
 
