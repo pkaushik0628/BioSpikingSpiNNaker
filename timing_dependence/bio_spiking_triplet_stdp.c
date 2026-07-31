@@ -1,5 +1,6 @@
+
 //! \file
-//! \brief Initialisation for timing_pfister_triplet_impl.h
+//! \brief Initialisation for bio spiking triplet
 #include "bio_spiking_triplet_stdp.h"
 
 //---------------------------------------
@@ -8,13 +9,7 @@
 // Exponential lookup-tables
 int16_lut *tau_plus_lookup;
 int16_lut *tau_minus_lookup;
-int16_lut *tau_x_lookup;
 int16_lut *tau_y_lookup;
-double *pot_amp;
-double *learning_rate;
-double *dep_amp;
-uint16_t *invtau_slow;
-uint16_t *invtau_fast;
 
 //---------------------------------------
 // Functions
