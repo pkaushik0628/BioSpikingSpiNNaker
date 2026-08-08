@@ -38,18 +38,18 @@ typedef struct pre_trace_t {
 Initializes post_trace_t
 Sets the fast and slow traces to 0
  */
-static inline post_trace_t initialize_post_trace(void){
+static inline post_trace_t timing_get_initial_post_trace(void){
     return (post_trace_t) {
         .post1 = 0,
-        .post2 = 0,
-        .last_spike_time = 0
+        .post2 = 0
         };
 }
+
 /**
 Initializes post_trace_t
 Sets the trace to 0
  */
-static inline pre_trace_t initialize_pre_trace(void){
+static inline pre_trace_t timing_get_initial_pre_trace(void){
     return (pre_trace_t){
         .pre1 = 0
     };
