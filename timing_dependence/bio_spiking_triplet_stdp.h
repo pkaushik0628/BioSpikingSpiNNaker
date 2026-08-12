@@ -1,10 +1,6 @@
 #ifndef _BIO_SPIKING_TRIPLET_STDP_H_
 #define _BIO_SPIKING_TRIPLET_STDP_H_
 
-// External Variables
-extern int16_lut *tau_plus_lookup;
-extern int16_lut *tau_minus_lookup;
-extern int16_lut *tau_y_lookup;
 
 /**
 Creates a struct to store a post-synaptic trace
@@ -33,6 +29,11 @@ typedef struct pre_trace_t {
 #include <debug.h>
 #include <neuron/plasticity/stdp/maths.h>
 #include <neuron/plasticity/stdp/stdp_typedefs.h>
+
+// External Variables
+extern int16_lut *tau_plus_lookup;
+extern int16_lut *tau_minus_lookup;
+extern int16_lut *tau_y_lookup;
 
 /**
 Initializes post_trace_t
