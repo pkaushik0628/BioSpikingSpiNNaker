@@ -1,13 +1,6 @@
 #ifndef _BIO_SPIKING_TRIPLET_STDP_H_
 #define _BIO_SPIKING_TRIPLET_STDP_H_
 
-#include <neuron/plasticity/stdp/synapse_structure/synapse_structure_weight_impl.h>
-#include "timing.h"
-#include <neuron/plasticity/stdp/weight_dependence/weight_additive_one_term_impl.h>
-#include <debug.h>
-#include <neuron/plasticity/stdp/maths.h>
-#include <neuron/plasticity/stdp/stdp_typedefs.h>
-
 // External Variables
 extern int16_lut *tau_plus_lookup;
 extern int16_lut *tau_minus_lookup;
@@ -33,6 +26,13 @@ pre2 = second presynaptic trace
 typedef struct pre_trace_t {
     int16_t pre1;
 } pre_trace_t;
+
+#include <neuron/plasticity/stdp/synapse_structure/synapse_structure_weight_impl.h>
+#include "timing.h"
+#include <neuron/plasticity/stdp/weight_dependence/weight_additive_one_term_impl.h>
+#include <debug.h>
+#include <neuron/plasticity/stdp/maths.h>
+#include <neuron/plasticity/stdp/stdp_typedefs.h>
 
 /**
 Initializes post_trace_t
